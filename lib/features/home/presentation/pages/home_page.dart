@@ -7,6 +7,7 @@ import 'package:kinochallenge/features/home/presentation/cubit/home_cubit.dart';
 import 'package:kinochallenge/features/home/presentation/models/event_form_result.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/add_event_bottom_sheet.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/challenge_stats_section.dart';
+import 'package:kinochallenge/features/home/presentation/widgets/collapsing_progress_header.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/events_list.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/home_add_fab.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/home_app_bar.dart';
@@ -99,14 +100,14 @@ class HomePage extends StatelessWidget {
                   ? const HomeEmptyState()
                   : CustomScrollView(
                       slivers: [
-                        SliverPadding(
-                          padding: const EdgeInsets.only(top: 6),
-                          sliver: SliverToBoxAdapter(
-                            child: ChallengeStatsSection(
-                              challengeName: state.challenge!.name,
-                              stats: state.stats!,
-                            ),
-                          ),
+                        CollapsingProgressHeader(
+                          challengeName: state.challenge!.name,
+                          completed: state.stats!.completed,
+                          target: state.stats!.target,
+                          progress: state.stats!.progress,
+                        ),
+                        SliverToBoxAdapter(
+                          child: ChallengeStatsSection(stats: state.stats!),
                         ),
                         SliverToBoxAdapter(
                           child: Padding(
