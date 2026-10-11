@@ -60,10 +60,13 @@ class HomePage extends StatelessWidget {
                   ? const HomeEmptyState()
                   : CustomScrollView(
                       slivers: [
-                        SliverToBoxAdapter(
-                          child: ChallengeStatsSection(
-                            challengeName: state.challenge!.name,
-                            stats: state.stats!,
+                        SliverPadding(
+                          padding: const .only(top: 6),
+                          sliver: SliverToBoxAdapter(
+                            child: ChallengeStatsSection(
+                              challengeName: state.challenge!.name,
+                              stats: state.stats!,
+                            ),
                           ),
                         ),
                         SliverToBoxAdapter(

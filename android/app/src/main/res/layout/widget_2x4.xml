@@ -4,68 +4,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_background"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <ImageView
+        android:id="@+id/widget_arc"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.7"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/widget_on_background"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-            <ProgressBar
-                android:id="@+id/widget_progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"
-                android:progress="0" />
-
-            <TextView
-                android:id="@+id/widget_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="0/0"
-                android:textColor="#FFFFFFFF"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/widget_days"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="#E6FFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/widget_stats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#CCFFFFFF"
-                android:textSize="12sp" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/widget_stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/widget_on_background_secondary"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/widget_button"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
             android:text="Добавить"
-            android:textColor="#FF1A1A1A"
-            android:textSize="14sp"
+            android:textColor="@color/widget_button_text"
+            android:textSize="13sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <!-- Hidden placeholders kept for shared provider IDs -->
+    <ProgressBar
+        android:id="@+id/widget_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/widget_progress"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/widget_days"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
 </LinearLayout>

@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:max="100"
-        android:progress="0" />
+        android:progress="0"
+        android:progressDrawable="@drawable/widget_progress" />
 
     <TextView
         android:id="@+id/widget_progress"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="0/0"
-        android:textColor="#FFFFFFFF"
+        android:textColor="@color/widget_on_background"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -30,17 +31,20 @@
         android:id="@+id/widget_days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/widget_on_background_secondary"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/widget_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/widget_on_background_tertiary"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/widget_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/widget_button_text"
         android:visibility="gone" />
 </LinearLayout>

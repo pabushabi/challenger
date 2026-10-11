@@ -29,7 +29,9 @@ Future<void> configureDependencies() async {
     ..registerSingleton<NotificationScheduler>(
       NotificationScheduler(notificationsPlugin),
     )
-    ..registerSingleton<HomeWidgetUpdater>(HomeWidgetUpdater())
+    ..registerSingleton<HomeWidgetUpdater>(
+      HomeWidgetUpdater(getIt<SettingsRepository>()),
+    )
     ..registerLazySingleton<ThemeCubit>(
       () => ThemeCubit(getIt<SettingsRepository>()),
     )
