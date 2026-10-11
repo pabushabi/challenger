@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CHALLENGER</string>
+    <string name="widget_1x1_description">Прогресс челленджа (1×1)</string>
+    <string name="widget_1x2_description">Прогресс и дни (1×2)</string>
+    <string name="widget_2x2_description">Крупный прогресс (2×2)</string>
+    <string name="widget_1x4_description">Статистика и добавление (1×4)</string>
+    <string name="widget_2x4_description">Расширенная статистика (2×4)</string>
+</resources>
