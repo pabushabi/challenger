@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddEventState {
 
- CubitState get status; List<EventFieldDef> get fieldDefs; Map<String, String> get values; String? get errorMessage;
+ CubitState get status; List<EventFieldDef> get fieldDefs; Map<String, String> get values; bool get isEditing; String? get errorMessage;
 /// Create a copy of AddEventState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AddEventStateCopyWith<AddEventState> get copyWith => _$AddEventStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddEventState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.fieldDefs, fieldDefs)&&const DeepCollectionEquality().equals(other.values, values)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddEventState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.fieldDefs, fieldDefs)&&const DeepCollectionEquality().equals(other.values, values)&&(identical(other.isEditing, isEditing) || other.isEditing == isEditing)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(fieldDefs),const DeepCollectionEquality().hash(values),errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(fieldDefs),const DeepCollectionEquality().hash(values),isEditing,errorMessage);
 
 @override
 String toString() {
-  return 'AddEventState(status: $status, fieldDefs: $fieldDefs, values: $values, errorMessage: $errorMessage)';
+  return 'AddEventState(status: $status, fieldDefs: $fieldDefs, values: $values, isEditing: $isEditing, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AddEventStateCopyWith<$Res>  {
   factory $AddEventStateCopyWith(AddEventState value, $Res Function(AddEventState) _then) = _$AddEventStateCopyWithImpl;
 @useResult
 $Res call({
- CubitState status, List<EventFieldDef> fieldDefs, Map<String, String> values, String? errorMessage
+ CubitState status, List<EventFieldDef> fieldDefs, Map<String, String> values, bool isEditing, String? errorMessage
 });
 
 
@@ -62,12 +62,13 @@ class _$AddEventStateCopyWithImpl<$Res>
 
 /// Create a copy of AddEventState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? fieldDefs = null,Object? values = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? fieldDefs = null,Object? values = null,Object? isEditing = null,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CubitState,fieldDefs: null == fieldDefs ? _self.fieldDefs : fieldDefs // ignore: cast_nullable_to_non_nullable
 as List<EventFieldDef>,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
-as Map<String, String>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,isEditing: null == isEditing ? _self.isEditing : isEditing // ignore: cast_nullable_to_non_nullable
+as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -150,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CubitState status,  List<EventFieldDef> fieldDefs,  Map<String, String> values,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CubitState status,  List<EventFieldDef> fieldDefs,  Map<String, String> values,  bool isEditing,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddEventState() when $default != null:
-return $default(_that.status,_that.fieldDefs,_that.values,_that.errorMessage);case _:
+return $default(_that.status,_that.fieldDefs,_that.values,_that.isEditing,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -171,10 +172,10 @@ return $default(_that.status,_that.fieldDefs,_that.values,_that.errorMessage);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CubitState status,  List<EventFieldDef> fieldDefs,  Map<String, String> values,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CubitState status,  List<EventFieldDef> fieldDefs,  Map<String, String> values,  bool isEditing,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _AddEventState():
-return $default(_that.status,_that.fieldDefs,_that.values,_that.errorMessage);}
+return $default(_that.status,_that.fieldDefs,_that.values,_that.isEditing,_that.errorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -188,10 +189,10 @@ return $default(_that.status,_that.fieldDefs,_that.values,_that.errorMessage);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CubitState status,  List<EventFieldDef> fieldDefs,  Map<String, String> values,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CubitState status,  List<EventFieldDef> fieldDefs,  Map<String, String> values,  bool isEditing,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _AddEventState() when $default != null:
-return $default(_that.status,_that.fieldDefs,_that.values,_that.errorMessage);case _:
+return $default(_that.status,_that.fieldDefs,_that.values,_that.isEditing,_that.errorMessage);case _:
   return null;
 
 }
@@ -203,12 +204,13 @@ return $default(_that.status,_that.fieldDefs,_that.values,_that.errorMessage);ca
 
 
 class _AddEventState extends AddEventState {
-  const _AddEventState({this.status = CubitState.initial, required this.fieldDefs, required this.values, this.errorMessage}): super._();
+  const _AddEventState({this.status = CubitState.initial, required this.fieldDefs, required this.values, this.isEditing = false, this.errorMessage}): super._();
   
 
 @override@JsonKey() final  CubitState status;
 @override final  List<EventFieldDef> fieldDefs;
 @override final  Map<String, String> values;
+@override@JsonKey() final  bool isEditing;
 @override final  String? errorMessage;
 
 /// Create a copy of AddEventState
@@ -221,16 +223,16 @@ _$AddEventStateCopyWith<_AddEventState> get copyWith => __$AddEventStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddEventState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.fieldDefs, fieldDefs)&&const DeepCollectionEquality().equals(other.values, values)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddEventState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.fieldDefs, fieldDefs)&&const DeepCollectionEquality().equals(other.values, values)&&(identical(other.isEditing, isEditing) || other.isEditing == isEditing)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(fieldDefs),const DeepCollectionEquality().hash(values),errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(fieldDefs),const DeepCollectionEquality().hash(values),isEditing,errorMessage);
 
 @override
 String toString() {
-  return 'AddEventState(status: $status, fieldDefs: $fieldDefs, values: $values, errorMessage: $errorMessage)';
+  return 'AddEventState(status: $status, fieldDefs: $fieldDefs, values: $values, isEditing: $isEditing, errorMessage: $errorMessage)';
 }
 
 
@@ -241,7 +243,7 @@ abstract mixin class _$AddEventStateCopyWith<$Res> implements $AddEventStateCopy
   factory _$AddEventStateCopyWith(_AddEventState value, $Res Function(_AddEventState) _then) = __$AddEventStateCopyWithImpl;
 @override @useResult
 $Res call({
- CubitState status, List<EventFieldDef> fieldDefs, Map<String, String> values, String? errorMessage
+ CubitState status, List<EventFieldDef> fieldDefs, Map<String, String> values, bool isEditing, String? errorMessage
 });
 
 
@@ -258,12 +260,13 @@ class __$AddEventStateCopyWithImpl<$Res>
 
 /// Create a copy of AddEventState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? fieldDefs = null,Object? values = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? fieldDefs = null,Object? values = null,Object? isEditing = null,Object? errorMessage = freezed,}) {
   return _then(_AddEventState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CubitState,fieldDefs: null == fieldDefs ? _self.fieldDefs : fieldDefs // ignore: cast_nullable_to_non_nullable
 as List<EventFieldDef>,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
-as Map<String, String>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,isEditing: null == isEditing ? _self.isEditing : isEditing // ignore: cast_nullable_to_non_nullable
+as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

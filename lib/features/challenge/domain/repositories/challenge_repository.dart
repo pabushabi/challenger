@@ -29,6 +29,11 @@ abstract class ChallengeRepository {
     required Map<String, String> fieldValues,
   });
 
+  Future<void> updateEvent({
+    required String eventId,
+    required Map<String, String> fieldValues,
+  });
+
   Future<void> deleteEvent(String eventId);
 
   Future<EventFieldDef> addFieldDef({

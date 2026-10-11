@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kinochallenge/features/challenge/domain/entities/challenge.dart';
+import 'package:kinochallenge/features/challenge/domain/entities/challenge_event.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/event_list_item.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/events_empty_placeholder.dart';
 
@@ -7,10 +8,12 @@ class EventsList extends StatelessWidget {
   const EventsList({
     super.key,
     required this.challenge,
+    required this.onOpen,
     required this.onDelete,
   });
 
   final Challenge challenge;
+  final ValueChanged<ChallengeEvent> onOpen;
   final ValueChanged<String> onDelete;
 
   @override
@@ -29,6 +32,7 @@ class EventsList extends StatelessWidget {
           event: event,
           fieldDefs: challenge.fieldDefs,
           index: total - index - 1,
+          onTap: () => onOpen(event),
           onDelete: () => onDelete(event.id),
         );
       },

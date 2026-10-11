@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kinochallenge/core/constants/cubit_state.dart';
+import 'package:kinochallenge/features/challenge/domain/entities/challenge_event.dart';
 import 'package:kinochallenge/features/home/presentation/cubit/home_cubit.dart';
+import 'package:kinochallenge/features/home/presentation/models/event_form_result.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/add_event_bottom_sheet.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/challenge_stats_section.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/events_list.dart';
@@ -22,17 +24,54 @@ class HomePage extends StatelessWidget {
       return;
     }
 
-    final values = await showModalBottomSheet<Map<String, String>>(
+    final result = await showModalBottomSheet<EventFormResult>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (sheetContext) {
-        return AddEventBottomSheet(fieldDefs: challenge.fieldDefs);
-      },
+      builder: (_) => AddEventBottomSheet(fieldDefs: challenge.fieldDefs),
     );
 
-    if (values != null && context.mounted) {
-      await cubit.addEvent(values);
+    if (result?.action == EventFormAction.save &&
+        result?.values != null &&
+        context.mounted) {
+      await cubit.addEvent(result!.values!);
+    }
+  }
+
+  Future<void> _openEventSheet(
+    BuildContext context,
+    ChallengeEvent event,
+  ) async {
+    final cubit = context.read<HomeCubit>();
+    final challenge = cubit.state.challenge;
+    if (challenge == null) {
+      return;
+    }
+
+    final result = await showModalBottomSheet<EventFormResult>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => AddEventBottomSheet(
+        fieldDefs: challenge.fieldDefs,
+        event: event,
+      ),
+    );
+
+    if (!context.mounted || result == null) {
+      return;
+    }
+
+    switch (result.action) {
+      case EventFormAction.save:
+        if (result.values != null) {
+          await cubit.updateEvent(
+            eventId: event.id,
+            fieldValues: result.values!,
+          );
+        }
+      case EventFormAction.delete:
+        await cubit.deleteEvent(event.id);
     }
   }
 
@@ -61,7 +100,7 @@ class HomePage extends StatelessWidget {
                   : CustomScrollView(
                       slivers: [
                         SliverPadding(
-                          padding: const .only(top: 6),
+                          padding: const EdgeInsets.only(top: 6),
                           sliver: SliverToBoxAdapter(
                             child: ChallengeStatsSection(
                               challengeName: state.challenge!.name,
@@ -80,6 +119,7 @@ class HomePage extends StatelessWidget {
                         ),
                         EventsList(
                           challenge: state.challenge!,
+                          onOpen: (event) => _openEventSheet(context, event),
                           onDelete: context.read<HomeCubit>().deleteEvent,
                         ),
                         const SliverToBoxAdapter(child: SizedBox(height: 88)),

@@ -191,6 +191,29 @@ class ChallengeRepositoryImpl implements ChallengeRepository {
   }
 
   @override
+  Future<void> updateEvent({
+    required String eventId,
+    required Map<String, String> fieldValues,
+  }) async {
+    await _db.transaction(() async {
+      await (_db.delete(_db.eventFieldValues)
+            ..where((t) => t.eventId.equals(eventId)))
+          .go();
+
+      for (final entry in fieldValues.entries) {
+        await _db.into(_db.eventFieldValues).insert(
+              EventFieldValuesCompanion.insert(
+                id: _uuid.v4(),
+                eventId: eventId,
+                fieldDefId: entry.key,
+                value: entry.value,
+              ),
+            );
+      }
+    });
+  }
+
+  @override
   Future<void> deleteEvent(String eventId) async {
     await _db.transaction(() async {
       await (_db.delete(_db.eventFieldValues)

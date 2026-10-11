@@ -9,8 +9,17 @@ part 'add_event_cubit.freezed.dart';
 part 'add_event_state.dart';
 
 class AddEventCubit extends Cubit<AddEventState> {
-  AddEventCubit({required List<EventFieldDef> fieldDefs})
-      : super(AddEventState.initial(fieldDefs));
+  AddEventCubit({
+    required List<EventFieldDef> fieldDefs,
+    Map<String, String>? initialValues,
+    bool isEditing = false,
+  }) : super(
+          AddEventState.initial(
+            fieldDefs,
+            initialValues: initialValues,
+            isEditing: isEditing,
+          ),
+        );
 
   void updateField(String fieldId, String value) {
     final next = Map<String, String>.from(state.values)..[fieldId] = value;
@@ -25,13 +34,13 @@ class AddEventCubit extends Cubit<AddEventState> {
   Map<String, String>? validateAndBuild() {
     for (final def in state.fieldDefs) {
       final value = state.values[def.id]?.trim() ?? '';
-      if (def.isDefault && def.type == FieldType.text && value.isEmpty) {
-        // Название опционально по PROMPT («опциональная информация»)
-        continue;
-      }
       if (def.type == FieldType.number && value.isNotEmpty) {
-        if (num.tryParse(value) == null) {
-          emit(state.copyWith(errorMessage: 'Поле «${def.label}» должно быть числом'));
+        if (num.tryParse(value.replaceAll(',', '.')) == null) {
+          emit(
+            state.copyWith(
+              errorMessage: 'Поле «${def.label}» должно быть числом',
+            ),
+          );
           return null;
         }
       }

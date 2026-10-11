@@ -107,6 +107,36 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> updateEvent({
+    required String eventId,
+    required Map<String, String> fieldValues,
+  }) async {
+    try {
+      await _challengeRepository.updateEvent(
+        eventId: eventId,
+        fieldValues: fieldValues,
+      );
+
+      final settings = _settingsRepository.load();
+      if (settings.vibrationEnabled) {
+        await HapticFeedback.selectionClick();
+      }
+
+      await _refreshAfterMutation();
+      await _notificationScheduler.reschedule(
+        settings: settings,
+        challenge: state.challenge,
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: CubitState.error,
+          errorMessage: 'Не удалось изменить событие',
+        ),
+      );
+    }
+  }
+
   Future<void> deleteEvent(String eventId) async {
     try {
       await _challengeRepository.deleteEvent(eventId);
