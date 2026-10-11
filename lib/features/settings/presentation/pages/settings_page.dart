@@ -25,28 +25,28 @@ class SettingsPage extends StatelessWidget {
         },
         builder: (context, state) {
           return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
             children: [
               SettingsVibrationTile(
                 enabled: state.settings.vibrationEnabled,
                 onChanged: context.read<SettingsCubit>().setVibration,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               SettingsThemeSection(
                 themeMode: state.settings.themeMode,
                 onChanged: context.read<SettingsCubit>().setThemeMode,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               SettingsAccentSection(
                 selectedIndex: state.settings.accentColorIndex,
                 onSelected: context.read<SettingsCubit>().setAccentColorIndex,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               SettingsWidgetsSection(
                 onAddWidget: context.read<SettingsCubit>().pinWidget,
               ),
-              const SizedBox(height: 8),
               if (state.challenge != null) ...[
+                const SizedBox(height: 12),
                 SettingsChallengeSection(
                   challenge: state.challenge!,
                   onSave: ({
@@ -72,11 +72,13 @@ class SettingsPage extends StatelessWidget {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.pop(dialogContext, false),
+                            onPressed: () =>
+                                Navigator.pop(dialogContext, false),
                             child: const Text('Отмена'),
                           ),
                           FilledButton(
-                            onPressed: () => Navigator.pop(dialogContext, true),
+                            onPressed: () =>
+                                Navigator.pop(dialogContext, true),
                             child: const Text('Начать новый'),
                           ),
                         ],
@@ -90,23 +92,25 @@ class SettingsPage extends StatelessWidget {
                     }
                   },
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 SettingsFieldsSection(
                   fieldDefs: state.challenge!.fieldDefs,
-                  onAdd: (label, type) => context.read<SettingsCubit>().addField(
-                        label: label,
-                        type: type,
-                      ),
+                  onAdd: (label, type) =>
+                      context.read<SettingsCubit>().addField(
+                            label: label,
+                            type: type,
+                          ),
                   onDelete: context.read<SettingsCubit>().deleteField,
                 ),
-                const SizedBox(height: 8),
               ],
+              const SizedBox(height: 12),
               SettingsNotificationsSection(
                 enabled: state.settings.notificationsEnabled,
                 slot: state.settings.notificationSlot,
                 onEnabledChanged:
                     context.read<SettingsCubit>().setNotificationsEnabled,
-                onSlotChanged: context.read<SettingsCubit>().setNotificationSlot,
+                onSlotChanged:
+                    context.read<SettingsCubit>().setNotificationSlot,
               ),
             ],
           );

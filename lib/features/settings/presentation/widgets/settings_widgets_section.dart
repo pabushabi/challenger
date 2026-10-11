@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kinochallenge/features/settings/presentation/widgets/settings_section_card.dart';
 
 class SettingsWidgetsSection extends StatelessWidget {
   const SettingsWidgetsSection({
@@ -10,35 +11,56 @@ class SettingsWidgetsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            'Виджеты',
-            style: Theme.of(context).textTheme.titleMedium,
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return SettingsSectionCard(
+      title: 'Виджеты',
+      subtitle: 'Доступны размеры 1×1, 1×2, 1×4, 2×2 и 2×4',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Material(
+            color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
+            borderRadius: BorderRadius.circular(14),
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: scheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.widgets_outlined,
+                      color: scheme.onPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Добавьте виджет на рабочий стол',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Доступны размеры 1×1, 1×2, 1×4, 2×2 и 2×4.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: OutlinedButton.icon(
+          const SizedBox(height: 12),
+          FilledButton.tonalIcon(
             onPressed: onAddWidget,
-            icon: const Icon(Icons.widgets_outlined),
+            icon: const Icon(Icons.add),
             label: const Text('Добавить виджет'),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

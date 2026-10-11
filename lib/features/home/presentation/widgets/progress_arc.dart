@@ -4,11 +4,13 @@ import 'package:kinochallenge/features/home/presentation/widgets/progress_arc_pa
 class ProgressArc extends StatelessWidget {
   const ProgressArc({
     super.key,
+    required this.challengeName,
     required this.completed,
     required this.target,
     required this.progress,
   });
 
+  final String challengeName;
   final int completed;
   final int target;
   final double progress;
@@ -19,7 +21,7 @@ class ProgressArc extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return SizedBox(
-      height: 180,
+      height: 260,
       width: double.infinity,
       child: CustomPaint(
         painter: ProgressArcPainter(
@@ -27,26 +29,37 @@ class ProgressArc extends StatelessWidget {
           foreground: scheme.primary,
           background: scheme.surfaceContainerHighest,
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 36),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '$completed / $target',
-                  style: textTheme.headlineMedium?.copyWith(
-                    color: scheme.onSurface,
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 52, 24, 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                challengeName,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.titleMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
                 ),
-                Text(
-                  'выполнено',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '$completed / $target',
+                style: textTheme.headlineMedium?.copyWith(
+                  color: scheme.onSurface,
+                  fontWeight: FontWeight.w700,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'выполнено',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ),
       ),

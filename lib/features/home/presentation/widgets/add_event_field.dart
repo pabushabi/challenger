@@ -42,7 +42,7 @@ class AddEventField extends StatelessWidget {
         final parsed = DateTime.tryParse(value) ?? DateTime.now();
         final formatted = DateFormat('d MMMM yyyy', 'ru').format(parsed);
         return InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           onTap: () async {
             final picked = await showDatePicker(
               context: context,
@@ -60,7 +60,12 @@ class AddEventField extends StatelessWidget {
               labelText: def.label,
               suffixIcon: const Icon(Icons.calendar_today_outlined),
             ),
-            child: Text(formatted),
+            child: Text(
+              formatted,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
           ),
         );
     }

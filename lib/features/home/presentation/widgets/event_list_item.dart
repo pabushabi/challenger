@@ -9,11 +9,13 @@ class EventListItem extends StatelessWidget {
     super.key,
     required this.event,
     required this.fieldDefs,
+    required this.index,
     required this.onDelete,
   });
 
   final ChallengeEvent event;
   final List<EventFieldDef> fieldDefs;
+  final int index;
   final VoidCallback onDelete;
 
   String _displayValue(EventFieldDef def) {
@@ -33,6 +35,7 @@ class EventListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final titleDef = fieldDefs.cast<EventFieldDef?>().firstWhere(
           (d) => d?.type == FieldType.text,
           orElse: () => null,
@@ -43,23 +46,78 @@ class EventListItem extends StatelessWidget {
             : 'Без названия')
         : 'Событие';
 
-    return Dismissible(
-      key: ValueKey(event.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        color: theme.colorScheme.errorContainer,
-        child: Icon(Icons.delete_outline, color: theme.colorScheme.onErrorContainer),
-      ),
-      onDismissed: (_) => onDelete(),
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(
-          fieldDefs
-              .where((d) => d.id != titleDef?.id)
-              .map((d) => '${d.label}: ${_displayValue(d)}')
-              .join(' · '),
+    final details = fieldDefs
+        .where((d) => d.id != titleDef?.id)
+        .map((d) => '${d.label}: ${_displayValue(d)}')
+        .join(' · ');
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Dismissible(
+        key: ValueKey(event.id),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            color: scheme.errorContainer,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            Icons.delete_outline,
+            color: scheme.onErrorContainer,
+          ),
+        ),
+        onDismissed: (_) => onDelete(),
+        child: Material(
+          color: scheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: scheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${index + 1}',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: scheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (details.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          details,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

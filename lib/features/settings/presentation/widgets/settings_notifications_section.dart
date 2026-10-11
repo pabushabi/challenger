@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kinochallenge/features/settings/domain/entities/app_settings.dart';
+import 'package:kinochallenge/features/settings/presentation/widgets/settings_section_card.dart';
 
 class SettingsNotificationsSection extends StatelessWidget {
   const SettingsNotificationsSection({
@@ -17,28 +18,46 @@ class SettingsNotificationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            'Уведомления',
-            style: Theme.of(context).textTheme.titleMedium,
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return SettingsSectionCard(
+      title: 'Уведомления',
+      subtitle: 'С оптимальной периодичностью выполнения челленджа',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Material(
+            color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
+            borderRadius: BorderRadius.circular(14),
+            child: SwitchListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+              title: Text(
+                'Напоминания',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                enabled ? 'Включены' : 'Выключены',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              value: enabled,
+              onChanged: onEnabledChanged,
+            ),
           ),
-        ),
-        SwitchListTile(
-          title: const Text('Напоминания'),
-          subtitle: const Text(
-            'С оптимальной периодичностью выполнения челленджа',
-          ),
-          value: enabled,
-          onChanged: onEnabledChanged,
-        ),
-        if (enabled)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: SegmentedButton<NotificationSlot>(
+          if (enabled) ...[
+            const SizedBox(height: 12),
+            Text(
+              'Время дня',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            SegmentedButton<NotificationSlot>(
               segments: [
                 for (final value in NotificationSlot.values)
                   ButtonSegment(
@@ -49,8 +68,9 @@ class SettingsNotificationsSection extends StatelessWidget {
               selected: {slot},
               onSelectionChanged: (value) => onSlotChanged(value.first),
             ),
-          ),
-      ],
+          ],
+        ],
+      ),
     );
   }
 }

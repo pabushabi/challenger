@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kinochallenge/core/utils/challenge_stats.dart';
+import 'package:kinochallenge/features/home/presentation/widgets/challenge_stats_card.dart';
 import 'package:kinochallenge/features/home/presentation/widgets/progress_arc.dart';
-import 'package:kinochallenge/features/home/presentation/widgets/stat_tile.dart';
 
 class ChallengeStatsSection extends StatelessWidget {
   const ChallengeStatsSection({
@@ -15,56 +15,18 @@ class ChallengeStatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Column(
         children: [
-          Text(
-            challengeName,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
           ProgressArc(
+            challengeName: challengeName,
             completed: stats.completed,
             target: stats.target,
             progress: stats.progress,
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: StatTile(
-                  label: 'Осталось дней',
-                  value: '${stats.daysRemaining}',
-                ),
-              ),
-              Expanded(
-                child: StatTile(
-                  label: 'Темп',
-                  value: stats.paceLabel,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: StatTile(
-                  label: 'Прогноз',
-                  value: '${stats.projectedCount}',
-                ),
-              ),
-              Expanded(
-                child: StatTile(
-                  label: 'Оптимально',
-                  value: stats.optimalPeriodicityLabel,
-                ),
-              ),
-            ],
-          ),
+          const SizedBox(height: 12),
+          ChallengeStatsCard(stats: stats),
         ],
       ),
     );

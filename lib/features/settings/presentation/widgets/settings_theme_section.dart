@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kinochallenge/features/settings/presentation/widgets/settings_section_card.dart';
 
 class SettingsThemeSection extends StatelessWidget {
   const SettingsThemeSection({
@@ -12,35 +13,30 @@ class SettingsThemeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('Тема', style: Theme.of(context).textTheme.titleMedium),
-        ),
-        SegmentedButton<ThemeMode>(
-          segments: const [
-            ButtonSegment(
-              value: ThemeMode.light,
-              label: Text('Светлая'),
-              icon: Icon(Icons.light_mode_outlined),
-            ),
-            ButtonSegment(
-              value: ThemeMode.dark,
-              label: Text('Тёмная'),
-              icon: Icon(Icons.dark_mode_outlined),
-            ),
-            ButtonSegment(
-              value: ThemeMode.system,
-              label: Text('Система'),
-              icon: Icon(Icons.settings_suggest_outlined),
-            ),
-          ],
-          selected: {themeMode},
-          onSelectionChanged: (value) => onChanged(value.first),
-        ),
-      ],
+    return SettingsSectionCard(
+      title: 'Тема',
+      subtitle: 'Светлая, тёмная или как в системе',
+      child: SegmentedButton<ThemeMode>(
+        segments: const [
+          ButtonSegment(
+            value: ThemeMode.light,
+            label: Text('Светлая'),
+            icon: Icon(Icons.light_mode_outlined),
+          ),
+          ButtonSegment(
+            value: ThemeMode.dark,
+            label: Text('Тёмная'),
+            icon: Icon(Icons.dark_mode_outlined),
+          ),
+          ButtonSegment(
+            value: ThemeMode.system,
+            label: Text('Система'),
+            icon: Icon(Icons.settings_suggest_outlined),
+          ),
+        ],
+        selected: {themeMode},
+        onSelectionChanged: (value) => onChanged(value.first),
+      ),
     );
   }
 }

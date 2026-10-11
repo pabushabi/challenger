@@ -17,7 +17,7 @@ class SetupDateField extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatted = DateFormat('d MMMM yyyy', 'ru').format(value);
     return InkWell(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       onTap: () async {
         final picked = await showDatePicker(
           context: context,
@@ -35,7 +35,12 @@ class SetupDateField extends StatelessWidget {
           labelText: label,
           suffixIcon: const Icon(Icons.calendar_today_outlined),
         ),
-        child: Text(formatted, style: Theme.of(context).textTheme.bodyLarge),
+        child: Text(
+          formatted,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+        ),
       ),
     );
   }

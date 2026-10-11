@@ -7,7 +7,7 @@ class ProgressArcPainter extends CustomPainter {
     required this.progress,
     required this.foreground,
     required this.background,
-    this.strokeWidth = 14,
+    this.strokeWidth = 16,
   });
 
   final double progress;
@@ -15,10 +15,15 @@ class ProgressArcPainter extends CustomPainter {
   final Color background;
   final double strokeWidth;
 
+  /// Спидометр: от ~7:30 до ~4:30 через верх (~270°).
+  static const double startAngle = math.pi * 0.75;
+  static const double sweepAngle = math.pi * 1.5;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height * 0.72);
-    final radius = math.min(size.width / 2, size.height) - strokeWidth;
+    final center = Offset(size.width / 2, size.height * 0.58);
+    final radius =
+        math.min(size.width / 2, size.height * 0.52) - strokeWidth / 2;
 
     final bgPaint = Paint()
       ..color = background
@@ -32,19 +37,11 @@ class ProgressArcPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    const startAngle = math.pi * 1.05;
-    const sweepAngle = math.pi * 0.9;
+    final rect = Rect.fromCircle(center: center, radius: radius);
 
+    canvas.drawArc(rect, startAngle, sweepAngle, false, bgPaint);
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepAngle,
-      false,
-      bgPaint,
-    );
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
+      rect,
       startAngle,
       sweepAngle * progress.clamp(0.0, 1.0),
       false,

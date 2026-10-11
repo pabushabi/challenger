@@ -19,14 +19,16 @@ class EventsList extends StatelessWidget {
       return const SliverToBoxAdapter(child: EventsEmptyPlaceholder());
     }
 
-    return SliverList.separated(
+    final total = challenge.events.length;
+
+    return SliverList.builder(
       itemCount: challenge.events.length,
-      separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final event = challenge.events[index];
         return EventListItem(
           event: event,
           fieldDefs: challenge.fieldDefs,
+          index: total - index - 1,
           onDelete: () => onDelete(event.id),
         );
       },

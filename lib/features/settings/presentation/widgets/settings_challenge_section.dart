@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:kinochallenge/features/challenge/domain/entities/challenge.dart';
+import 'package:kinochallenge/features/settings/presentation/widgets/settings_section_card.dart';
 import 'package:kinochallenge/features/setup/presentation/widgets/setup_date_field.dart';
 
 class SettingsChallengeSection extends StatefulWidget {
@@ -62,75 +63,75 @@ class _SettingsChallengeSectionState extends State<SettingsChallengeSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            'Текущий челлендж',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-        TextField(
-          controller: _nameController,
-          decoration: const InputDecoration(labelText: 'Название'),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _targetController,
-          decoration: const InputDecoration(labelText: 'Целевое количество'),
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        ),
-        const SizedBox(height: 12),
-        SetupDateField(
-          label: 'Дата начала',
-          value: _startDate,
-          onChanged: (d) => setState(() => _startDate = d),
-        ),
-        const SizedBox(height: 12),
-        SetupDateField(
-          label: 'Дата окончания',
-          value: _endDate,
-          onChanged: (d) => setState(() => _endDate = d),
-        ),
-        const SizedBox(height: 12),
-        Text(
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return SettingsSectionCard(
+      title: 'Текущий челлендж',
+      subtitle:
           'Период: ${DateFormat('d MMM yyyy', 'ru').format(_startDate)} — '
           '${DateFormat('d MMM yyyy', 'ru').format(_endDate)}',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: FilledButton(
-                onPressed: () {
-                  final target = int.tryParse(_targetController.text.trim());
-                  if (target == null || target <= 0) {
-                    return;
-                  }
-                  widget.onSave(
-                    name: _nameController.text,
-                    targetCount: target,
-                    startDate: _startDate,
-                    endDate: _endDate,
-                  );
-                },
-                child: const Text('Сохранить'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: _nameController,
+            decoration: const InputDecoration(labelText: 'Название'),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _targetController,
+            decoration: const InputDecoration(labelText: 'Целевое количество'),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          ),
+          const SizedBox(height: 12),
+          SetupDateField(
+            label: 'Дата начала',
+            value: _startDate,
+            onChanged: (d) => setState(() => _startDate = d),
+          ),
+          const SizedBox(height: 12),
+          SetupDateField(
+            label: 'Дата окончания',
+            value: _endDate,
+            onChanged: (d) => setState(() => _endDate = d),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton(
+                  onPressed: () {
+                    final target = int.tryParse(_targetController.text.trim());
+                    if (target == null || target <= 0) {
+                      return;
+                    }
+                    widget.onSave(
+                      name: _nameController.text,
+                      targetCount: target,
+                      startDate: _startDate,
+                      endDate: _endDate,
+                    );
+                  },
+                  child: const Text('Сохранить'),
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: widget.onStartNew,
-                child: const Text('Новый'),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: widget.onStartNew,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: scheme.error,
+                    side: BorderSide(color: scheme.error.withValues(alpha: 0.5)),
+                  ),
+                  child: const Text('Новый'),
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

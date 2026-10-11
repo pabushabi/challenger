@@ -14,30 +14,29 @@ class AccentColorDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = ThemeData.estimateBrightnessForColor(color) == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       customBorder: const CircleBorder(),
-      child: Container(
-        width: 40,
-        height: 40,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        width: 42,
+        height: 42,
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
           border: Border.all(
-            color: selected
-                ? Theme.of(context).colorScheme.onSurface
-                : Colors.transparent,
-            width: 3,
+            color: selected ? scheme.onSurface : scheme.outlineVariant,
+            width: selected ? 3 : 1.5,
           ),
         ),
         child: selected
             ? Icon(
                 Icons.check,
                 size: 18,
-                color: ThemeData.estimateBrightnessForColor(color) ==
-                        Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: isDark ? Colors.white : Colors.black87,
               )
             : null,
       ),
