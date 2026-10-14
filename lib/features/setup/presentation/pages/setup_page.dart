@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kinochallenge/core/constants/cubit_state.dart';
+import 'package:kinochallenge/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:kinochallenge/features/setup/presentation/cubit/setup_cubit.dart';
 import 'package:kinochallenge/features/setup/presentation/widgets/setup_date_field.dart';
 import 'package:kinochallenge/features/setup/presentation/widgets/setup_form.dart';
 import 'package:kinochallenge/features/setup/presentation/widgets/setup_header.dart';
+import 'package:kinochallenge/features/setup/presentation/widgets/setup_restore_button.dart';
 
 class SetupPage extends StatelessWidget {
   const SetupPage({super.key});
+
+  Future<void> _onRestore(BuildContext context) async {
+    final result = await context.read<SetupCubit>().restoreFromBackup();
+    if (!context.mounted || result == null) {
+      return;
+    }
+    if (result) {
+      context.read<ThemeCubit>().refresh();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +33,7 @@ class SetupPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            final busy = state.status == CubitState.loading;
             return ListView(
               padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
               children: [
@@ -50,16 +63,21 @@ class SetupPage extends StatelessWidget {
                 ],
                 const SizedBox(height: 32),
                 FilledButton(
-                  onPressed: state.status == CubitState.loading
+                  onPressed: busy
                       ? null
                       : () => context.read<SetupCubit>().submit(),
-                  child: state.status == CubitState.loading
+                  child: busy
                       ? const SizedBox(
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text('Начать'),
+                ),
+                const SizedBox(height: 12),
+                SetupRestoreButton(
+                  enabled: !busy,
+                  onPressed: () => _onRestore(context),
                 ),
               ],
             );

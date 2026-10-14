@@ -288,4 +288,63 @@ class ChallengeRepositoryImpl implements ChallengeRepository {
       await (_db.delete(_db.eventFieldDefs)..where((t) => t.id.equals(id))).go();
     });
   }
+
+  @override
+  Future<void> restoreFromSnapshot(Challenge? challenge) async {
+    await _db.transaction(() async {
+      await _db.delete(_db.eventFieldValues).go();
+      await _db.delete(_db.events).go();
+      await _db.delete(_db.eventFieldDefs).go();
+      await _db.delete(_db.challenges).go();
+
+      if (challenge == null) {
+        return;
+      }
+
+      await _db.into(_db.challenges).insert(
+            ChallengesCompanion.insert(
+              id: challenge.id,
+              name: challenge.name,
+              targetCount: challenge.targetCount,
+              startDate: challenge.startDate,
+              endDate: challenge.endDate,
+              isActive: Value(challenge.isActive),
+            ),
+          );
+
+      for (final field in challenge.fieldDefs) {
+        await _db.into(_db.eventFieldDefs).insert(
+              EventFieldDefsCompanion.insert(
+                id: field.id,
+                challengeId: field.challengeId,
+                label: field.label,
+                type: field.type.name,
+                isDefault: Value(field.isDefault),
+                sortOrder: field.sortOrder,
+              ),
+            );
+      }
+
+      for (final event in challenge.events) {
+        await _db.into(_db.events).insert(
+              EventsCompanion.insert(
+                id: event.id,
+                challengeId: event.challengeId,
+                createdAt: event.createdAt,
+              ),
+            );
+
+        for (final entry in event.values.entries) {
+          await _db.into(_db.eventFieldValues).insert(
+                EventFieldValuesCompanion.insert(
+                  id: _uuid.v4(),
+                  eventId: event.id,
+                  fieldDefId: entry.key,
+                  value: entry.value,
+                ),
+              );
+        }
+      }
+    });
+  }
 }

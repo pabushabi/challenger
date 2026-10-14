@@ -1,0 +1,4 @@
+enum BackupExportMode {
+  share,
+  saveToDevice,
+}

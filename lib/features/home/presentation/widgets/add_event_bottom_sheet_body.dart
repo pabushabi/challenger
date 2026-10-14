@@ -35,83 +35,107 @@ class AddEventBottomSheetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).systemGestureInsets.bottom;
+    final media = MediaQuery.of(context);
+    final keyboardInset = media.viewInsets.bottom;
+    final gestureInset = media.systemGestureInsets.bottom;
+
     return BlocBuilder<AddEventCubit, AddEventState>(
       builder: (context, state) {
         final title = state.isEditing ? 'Отметка' : 'Новая отметка';
         return Padding(
-          padding: EdgeInsets.only(bottom: bottomInset),
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    if (state.isEditing) ...[
-                      const SizedBox(height: 4),
+          padding: EdgeInsets.only(bottom: keyboardInset),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              // Высота уже учитывает клавиатуру через padding выше.
+              maxHeight: media.size.height * 0.9,
+            ),
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    8,
+                    20,
+                    100 + gestureInset,
+                  ),
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Text(
-                        'Просмотр и изменение выполненной отметки',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
+                        title,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                    ],
-                    const SizedBox(height: 16),
-                    for (final def in state.fieldDefs) ...[
-                      AddEventField(
-                        key: ValueKey(def.id),
-                        def: def,
-                        value: state.values[def.id] ?? '',
-                        onChanged: (v) =>
-                            context.read<AddEventCubit>().updateField(def.id, v),
-                        onDateChanged: (d) => context
-                            .read<AddEventCubit>()
-                            .updateDateField(def.id, d),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                    if (state.errorMessage != null)
-                      Text(
-                        state.errorMessage!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                      ),
-                    if (state.isEditing) ...[
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: AddEventDeleteButton(
-                          onPressed: () => _confirmDelete(context),
+                      if (state.isEditing) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'Просмотр и изменение выполненной отметки',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
                         ),
-                      ),
+                      ],
+                      const SizedBox(height: 16),
+                      for (final def in state.fieldDefs) ...[
+                        AddEventField(
+                          key: ValueKey(def.id),
+                          def: def,
+                          value: state.values[def.id] ?? '',
+                          onChanged: (v) => context
+                              .read<AddEventCubit>()
+                              .updateField(def.id, v),
+                          onDateChanged: (d) => context
+                              .read<AddEventCubit>()
+                              .updateDateField(def.id, d),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                      if (state.errorMessage != null)
+                        Text(
+                          state.errorMessage!,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                      if (state.isEditing) ...[
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: AddEventDeleteButton(
+                            onPressed: () => _confirmDelete(context),
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              Positioned(
-                right: 16,
-                bottom: 16,
-                child: AddEventSaveButton(
-                  label: state.isEditing ? 'Сохранить' : 'Сохранить',
-                  onPressed: () {
-                    final values =
-                        context.read<AddEventCubit>().validateAndBuild();
-                    if (values != null) {
-                      Navigator.of(context).pop(EventFormResult.save(values));
-                    }
-                  },
+                Positioned(
+                  right: 16,
+                  bottom: 16 + gestureInset,
+                  child: AddEventSaveButton(
+                    label: state.isEditing ? 'Сохранить' : 'Сохранить',
+                    onPressed: () {
+                      final values =
+                          context.read<AddEventCubit>().validateAndBuild();
+                      if (values != null) {
+                        Navigator.of(context)
+                            .pop(EventFormResult.save(values));
+                      }
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

@@ -4,6 +4,7 @@ import 'package:kinochallenge/core/constants/cubit_state.dart';
 import 'package:kinochallenge/features/challenge/domain/repositories/challenge_repository.dart';
 import 'package:kinochallenge/features/home_widgets/data/home_widget_updater.dart';
 import 'package:kinochallenge/features/notifications/data/notification_scheduler.dart';
+import 'package:kinochallenge/features/settings/data/backup_service.dart';
 import 'package:kinochallenge/features/settings/data/settings_repository.dart';
 
 part 'setup_cubit.freezed.dart';
@@ -15,16 +16,19 @@ class SetupCubit extends Cubit<SetupState> {
     required HomeWidgetUpdater homeWidgetUpdater,
     required NotificationScheduler notificationScheduler,
     required SettingsRepository settingsRepository,
+    required BackupService backupService,
   })  : _challengeRepository = challengeRepository,
         _homeWidgetUpdater = homeWidgetUpdater,
         _notificationScheduler = notificationScheduler,
         _settingsRepository = settingsRepository,
+        _backupService = backupService,
         super(SetupState.initial());
 
   final ChallengeRepository _challengeRepository;
   final HomeWidgetUpdater _homeWidgetUpdater;
   final NotificationScheduler _notificationScheduler;
   final SettingsRepository _settingsRepository;
+  final BackupService _backupService;
 
   void updateName(String value) {
     emit(state.copyWith(name: value, errorMessage: null));
@@ -80,6 +84,44 @@ class SetupCubit extends Cubit<SetupState> {
         state.copyWith(
           status: CubitState.error,
           errorMessage: 'Не удалось создать челлендж',
+        ),
+      );
+      return false;
+    }
+  }
+
+  /// `null` — пользователь отменил выбор файла.
+  Future<bool?> restoreFromBackup() async {
+    try {
+      final payload = await _backupService.pickBackup();
+      if (payload == null) {
+        return null;
+      }
+      if (payload.challenge == null) {
+        emit(
+          state.copyWith(
+            errorMessage: 'В бэкапе нет челленджа',
+          ),
+        );
+        return false;
+      }
+
+      emit(state.copyWith(status: CubitState.loading, errorMessage: null));
+      await _backupService.applyBackup(payload);
+      final challenge = await _challengeRepository.getActiveChallenge();
+      final settings = _settingsRepository.load();
+      await _homeWidgetUpdater.update(challenge);
+      await _notificationScheduler.reschedule(
+        settings: settings,
+        challenge: challenge,
+      );
+      emit(state.copyWith(status: CubitState.success));
+      return true;
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: CubitState.error,
+          errorMessage: 'Не удалось восстановить бэкап',
         ),
       );
       return false;

@@ -49,4 +49,8 @@ abstract class ChallengeRepository {
   });
 
   Future<void> deleteFieldDef(String id);
+
+  /// Полная замена локальных данных челленджа из бэкапа.
+  /// Если [challenge] == null — все челленджи удаляются.
+  Future<void> restoreFromSnapshot(Challenge? challenge);
 }

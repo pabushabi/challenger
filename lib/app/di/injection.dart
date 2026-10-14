@@ -6,6 +6,7 @@ import 'package:kinochallenge/features/challenge/domain/repositories/challenge_r
 import 'package:kinochallenge/features/home/presentation/cubit/home_cubit.dart';
 import 'package:kinochallenge/features/home_widgets/data/home_widget_updater.dart';
 import 'package:kinochallenge/features/notifications/data/notification_scheduler.dart';
+import 'package:kinochallenge/features/settings/data/backup_service.dart';
 import 'package:kinochallenge/features/settings/data/settings_repository.dart';
 import 'package:kinochallenge/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:kinochallenge/features/settings/presentation/cubit/theme_cubit.dart';
@@ -32,6 +33,12 @@ Future<void> configureDependencies() async {
     ..registerSingleton<HomeWidgetUpdater>(
       HomeWidgetUpdater(getIt<SettingsRepository>()),
     )
+    ..registerSingleton<BackupService>(
+      BackupService(
+        challengeRepository: getIt(),
+        settingsRepository: getIt(),
+      ),
+    )
     ..registerLazySingleton<ThemeCubit>(
       () => ThemeCubit(getIt<SettingsRepository>()),
     )
@@ -41,6 +48,7 @@ Future<void> configureDependencies() async {
         homeWidgetUpdater: getIt(),
         notificationScheduler: getIt(),
         settingsRepository: getIt(),
+        backupService: getIt(),
       ),
     )
     ..registerFactory<HomeCubit>(
@@ -57,6 +65,7 @@ Future<void> configureDependencies() async {
         challengeRepository: getIt(),
         notificationScheduler: getIt(),
         homeWidgetUpdater: getIt(),
+        backupService: getIt(),
       ),
     );
 

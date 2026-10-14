@@ -7,8 +7,10 @@ import 'package:kinochallenge/features/challenge/domain/entities/field_type.dart
 import 'package:kinochallenge/features/challenge/domain/repositories/challenge_repository.dart';
 import 'package:kinochallenge/features/home_widgets/data/home_widget_updater.dart';
 import 'package:kinochallenge/features/notifications/data/notification_scheduler.dart';
+import 'package:kinochallenge/features/settings/data/backup_service.dart';
 import 'package:kinochallenge/features/settings/data/settings_repository.dart';
 import 'package:kinochallenge/features/settings/domain/entities/app_settings.dart';
+import 'package:kinochallenge/features/settings/domain/entities/backup_export_mode.dart';
 
 part 'settings_cubit.freezed.dart';
 part 'settings_state.dart';
@@ -19,16 +21,19 @@ class SettingsCubit extends Cubit<SettingsState> {
     required ChallengeRepository challengeRepository,
     required NotificationScheduler notificationScheduler,
     required HomeWidgetUpdater homeWidgetUpdater,
+    required BackupService backupService,
   })  : _settingsRepository = settingsRepository,
         _challengeRepository = challengeRepository,
         _notificationScheduler = notificationScheduler,
         _homeWidgetUpdater = homeWidgetUpdater,
+        _backupService = backupService,
         super(SettingsState.initial());
 
   final SettingsRepository _settingsRepository;
   final ChallengeRepository _challengeRepository;
   final NotificationScheduler _notificationScheduler;
   final HomeWidgetUpdater _homeWidgetUpdater;
+  final BackupService _backupService;
 
   Future<void> load() async {
     emit(state.copyWith(status: CubitState.loading));
@@ -160,6 +165,63 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   Future<void> pinWidget() async {
     await _homeWidgetUpdater.requestPin();
+  }
+
+  /// `null` — пользователь отменил сохранение/шаринг.
+  Future<bool?> exportBackup(BackupExportMode mode) async {
+    try {
+      final result = await _backupService.exportBackup(mode);
+      return switch (result) {
+        BackupExportResult.success => true,
+        BackupExportResult.cancelled => null,
+      };
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: CubitState.error,
+          errorMessage: 'Не удалось создать бэкап',
+        ),
+      );
+      return false;
+    }
+  }
+
+  /// `null` — пользователь отменил выбор файла.
+  Future<bool?> importBackup() async {
+    try {
+      final payload = await _backupService.pickBackup();
+      if (payload == null) {
+        return null;
+      }
+
+      await _backupService.applyBackup(payload);
+      final settings = _settingsRepository.load();
+      final challenge = await _challengeRepository.getActiveChallenge();
+
+      emit(
+        state.copyWith(
+          status: CubitState.success,
+          settings: settings,
+          challenge: challenge,
+          errorMessage: null,
+        ),
+      );
+
+      await _homeWidgetUpdater.update(challenge);
+      await _notificationScheduler.reschedule(
+        settings: settings,
+        challenge: challenge,
+      );
+      return true;
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: CubitState.error,
+          errorMessage: 'Не удалось восстановить бэкап',
+        ),
+      );
+      return false;
+    }
   }
 
   Future<void> _persist(AppSettings settings) async {
